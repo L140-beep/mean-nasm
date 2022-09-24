@@ -84,35 +84,35 @@ section .text
 _start:
     mov ebx, 0
     mov eax, 0
-_sum_array1:
-    add al, [array1 + ebx*1]
+_sum_x:
+    add al, [x + ebx*4]
     inc ebx
     cmp ebx, array_len
-    jl _sum_array1
+    jl _sum_x
 
-    mov [array1_sum], eax
+    mov [x_sum], eax
     ; const_print "Сумма первого массива:"
     ; putchar 0xA
-    ;printd Я не понимаю почему, но если добавить эту команду
-    ;то array1_sum становится равен нулю
+    ;printd ;Я не понимаю почему, но если добавить эту команду
+    ;то ;x_sum становится равен нулю
     ;print nl_len, new_line 
     mov ebx, 0
     mov eax, 0
-_sum_array2:
-    add al, [array2 + ebx*1]
+_sum_y:
+    add al, [y + ebx*4]
     inc ebx
     cmp ebx, array_len
-    jl _sum_array2
+    jl _sum_y
 
-    mov [array2_sum], eax
-    ; printd И здесь тоже. Странно, что даже тут теряется array1_sum
+    mov [y_sum], eax
+    ; printd И здесь тоже. Странно, что даже тут теряется x_sum
     xor edx, edx
-    mov ebx, [array1_sum]
+    mov ebx, [x_sum]
     sub eax, ebx
     const_print "Результат вычитания суммы массивов: "
     printd
     putchar 0xA
-    mov ebx, len + 1
+    mov ebx, array_len
     div ebx
     const_print "Среднее арифметическое разности двух массивов: "
     printd
@@ -120,7 +120,7 @@ _sum_array2:
     mov eax, edx
     printd
     putchar 0xA
-    mov eax, len + 1
+    mov eax, array_len
     const_print "Количество элементов в массиве: "
     printd
     putchar 0xA
@@ -132,14 +132,14 @@ _sum_array2:
     EXIT 0
 
 section .data
-    array1 db 10, 13, 14, 7, 8, 12
-    array_len equ $ - array1
-    array2 db 20, 23, 24, 17, 18, 123
+    x dd 5, 3, 2, 6, 1, 7, 4
+    y dd 0, 10, 1, 9, 2, 8, 5
+    array_len equ ($ - y) / 4
     new_line db 0xA, 0xB
     nl_len equ $ - new_line
     message db "Done!"
     len equ $ - message
 section .bss
     result resb 1
-    array1_sum resb 10
-    array2_sum resb 10
+    x_sum resb 10
+    y_sum resb 10
