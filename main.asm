@@ -155,7 +155,7 @@ _result:
     EXIT 0
 
 section .data
-    x dd 25, 3, 2, 6, 1, 7, 4 ;28
+    x dd 25, 3, 2, 6, 1, 7, 4 ;48
     y dd 0, 10, 1, 9, 2, 8, 5 ; 35
     array_len equ ($ - y) / 4
     message db "Done!"
