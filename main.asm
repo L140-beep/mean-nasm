@@ -77,6 +77,22 @@
     pop eax
 %endmacro
 
+%macro decimal 2
+    pushd
+    mov eax, %1
+    mov ebx, 10
+    mul ebx
+    mov ecx, %2
+    div ecx
+    pop edx
+    pop ecx
+    pop ebx
+%endmacro
+
+%macro new_line 0
+    putchar 0xA
+    putchar 0xD
+%endmacro
 
 section .text
     global _start
@@ -91,55 +107,62 @@ _sum_x:
     jl _sum_x
 
     mov [x_sum], eax
-    ; const_print "Сумма первого массива:"
-    ; putchar 0xA
-    ;printd ;Я не понимаю почему, но если добавить эту команду
-    ;то ;x_sum становится равен нулю
-    ;print nl_len, new_line 
     mov ebx, 0
     mov eax, 0
+
 _sum_y:
     add al, [y + ebx*4]
     inc ebx
     cmp ebx, array_len
     jl _sum_y
 
+    
     mov [y_sum], eax
-    ; printd И здесь тоже. Странно, что даже тут теряется x_sum
-    xor edx, edx
+    mov ebx, [x_sum]
+    cmp eax, ebx
+    jl _iflower
+    jg _ifgrower
+
+_iflower:
+    mov eax, [x_sum]
+    mov ebx, [y_sum]
+    sub eax, ebx
+    
+    jmp _result
+
+_ifgrower:
+    mov eax, [y_sum]
     mov ebx, [x_sum]
     sub eax, ebx
-    const_print "Результат вычитания суммы массивов: "
-    printd
-    putchar 0xA
+
+    jmp _result
+
+
+
+_result:
     mov ebx, array_len
     div ebx
     const_print "Среднее арифметическое разности двух массивов: "
     printd
     putchar ','
-    mov eax, edx
+    decimal edx, array_len
     printd
-    putchar 0xA
-    mov eax, array_len
-    const_print "Количество элементов в массиве: "
-    printd
-    putchar 0xA
 
-    print nl_len, new_line
+    new_line
     print len, message
-    print nl_len, new_line
+    new_line
 
     EXIT 0
 
 section .data
-    x dd 5, 3, 2, 6, 1, 7, 4
-    y dd 0, 10, 1, 9, 2, 8, 5
+    x dd 25, 3, 2, 6, 1, 7, 4 ;28
+    y dd 0, 10, 1, 9, 2, 8, 5 ; 35
     array_len equ ($ - y) / 4
-    new_line db 0xA, 0xB
-    nl_len equ $ - new_line
     message db "Done!"
     len equ $ - message
 section .bss
     result resb 1
     x_sum resb 10
     y_sum resb 10
+    result_integer resb 5
+    result_decimal resb 1
