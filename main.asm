@@ -165,7 +165,7 @@ _print:
 
 
 section .data
-    x dd 25, 3, 2, 6, 1, 7, 4 
+    x dd 5, 3, 2, 6, 1, 7, 4 
     y dd 0, 10, 1, 9, 2, 8, 5 
     array_len equ ($ - y) / 4
     message db "Done!"
